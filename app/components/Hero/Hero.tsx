@@ -33,39 +33,22 @@ const HeroSection: React.FC = () => {
     pointLight.position.set(5, 5, 5);
     scene.add(pointLight);
 
-    // Interactive Particle System with Snowflake Shape
+    // Interactive Particle System
     const particlesGeometry = new THREE.BufferGeometry();
     const particlesCount = 1000;
     const positions = new Float32Array(particlesCount * 3);
 
-    // Function to create a snowflake pattern
-    const createSnowflake = () => {
-      let index = 0;
-      const branches = 6; // Number of branches in the snowflake
-      const angleIncrement = (Math.PI * 2) / branches;
-
-      for (let i = 0; i < particlesCount; i++) {
-        const radius = Math.random() * 10; // Random radius within the snowflake
-        const angle = Math.floor(i / (particlesCount / branches)) * angleIncrement;
-
-        // Position particles in a symmetrical pattern
-        positions[index] = Math.cos(angle) * radius;
-        positions[index + 1] = Math.sin(angle) * radius;
-        positions[index + 2] = (Math.random() - 0.5) * 10; // Random depth
-
-        index += 3;
-      }
-    };
-
-    createSnowflake();
+    for (let i = 0; i < particlesCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 20;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+    }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     const particlesMaterial = new THREE.PointsMaterial({
-      color: 0xffffff, // White color for snowflakes
+      color: 0x00ffff, // Cyan color
       size: 0.1,
-      transparent: true,
-      opacity: 0.8,
     });
 
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
@@ -73,7 +56,7 @@ const HeroSection: React.FC = () => {
 
     // Load Font and Create 3D Text
     const fontLoader = new FontLoader();
-    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
+    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font:any) => {
       const textGeometry = new TextGeometry('Rahul Dev', {
         font: font,
         size: 1,
@@ -164,7 +147,7 @@ const HeroSection: React.FC = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center">
-        <Typewriter />
+      <Typewriter/>
         <p className="mt-4 text-lg text-gray-300">
           I create stunning, interactive, and user-friendly experiences.
         </p>
