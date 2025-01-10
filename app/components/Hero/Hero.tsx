@@ -2,13 +2,14 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import gsap from 'gsap';
 import Typewriter from './Typewriter';
 
 const HeroSection: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -56,7 +57,7 @@ const HeroSection: React.FC = () => {
 
     // Load Font and Create 3D Text
     const fontLoader = new FontLoader();
-    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font:any) => {
+    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font: any) => {
       const textGeometry = new TextGeometry('Rahul Dev', {
         font: font,
         size: 1,
@@ -140,6 +141,27 @@ const HeroSection: React.FC = () => {
     };
   }, []);
 
+  // Add hover animation to the button
+  useEffect(() => {
+    if (buttonRef.current) {
+      const button = buttonRef.current;
+      button.addEventListener('mouseenter', () => {
+        gsap.to(button, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      });
+      button.addEventListener('mouseleave', () => {
+        gsap.to(button, {
+          scale: 1,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      });
+    }
+  }, []);
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* 3D Scene */}
@@ -147,11 +169,14 @@ const HeroSection: React.FC = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center">
-      <Typewriter/>
-        <p className="mt-4 text-lg text-gray-300">
+        <Typewriter />
+        <p className="mt-4 text-lg text-gray-300 font-light p-2">
           I create stunning, interactive, and user-friendly experiences.
         </p>
-        <button className="mt-8 px-6 py-3 bg-purple-500 text-white font-bold rounded-lg hover:bg-purple-600 transition-colors neon-button">
+        <button
+          ref={buttonRef}
+          className="mt-8 px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all transform shadow-lg hover:shadow-xl neon-button"
+        >
           View My Work
         </button>
       </div>

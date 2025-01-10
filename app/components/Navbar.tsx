@@ -23,7 +23,7 @@ const Navbar = () => {
         {/* Brand Name */}
         <Link
           href="/"
-          className={`text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 transition-all duration-500 uppercase tracking-wider neon-glow ${bebasNeue.className}`}
+          className="text-green-400 neon-text text-3xl font-bold"
         >
           Rahul Dev
         </Link>
