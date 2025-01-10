@@ -45,6 +45,9 @@ const AboutMe: React.FC = () => {
   };
 
   return (
+
+
+    <>
     <section
       id="about"
       className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-white flex flex-col md:flex-row items-center justify-center relative overflow-hidden"
@@ -149,6 +152,8 @@ const AboutMe: React.FC = () => {
         </div>
       </div>
     </section>
+
+    </>
   );
 };
 

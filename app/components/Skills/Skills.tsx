@@ -48,7 +48,7 @@ const Skills: React.FC = () => {
         ref={skillsSectionRef}
         className="flex flex-col items-center justify-center text-center z-10 p-4"
       >
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8  text-green-400 neon-text">
           Skills
         </h2>
         <p className="text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto text-gray-300">

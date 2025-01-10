@@ -5,7 +5,7 @@ import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-const ProjectsPage: React.FC = () => {
+const Projects: React.FC = () => {
   const projectsRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -78,7 +78,7 @@ const ProjectsPage: React.FC = () => {
       <div className="flex flex-col items-center justify-center text-center z-10 p-4 w-full max-w-6xl">
         <h2
           ref={headingRef}
-          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600"
+          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-green-400 neon-text"
         >
           Projects
         </h2>
@@ -86,7 +86,9 @@ const ProjectsPage: React.FC = () => {
           {projects.map((project, index) => (
             <div
               key={index}
-              ref={(el) => (cardsRef.current[index] = el!)}
+              ref={(el) => {
+                if (el) cardsRef.current[index] = el; // Fix: Ensure the ref callback does not return a value
+              }}
               className="relative p-6 rounded-lg shadow-lg border border-gray-800 hover:scale-105 transition-transform duration-300"
             >
               <div className="absolute inset-0 bg-black opacity-30 rounded-lg"></div>
@@ -162,4 +164,4 @@ const ThreeScene: React.FC = () => {
   );
 };
 
-export default ProjectsPage;
+export default Projects;

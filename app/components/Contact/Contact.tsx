@@ -44,7 +44,7 @@ const Contact: React.FC = () => {
       <div className="flex flex-col items-center justify-center text-center z-10 p-4 w-full max-w-4xl">
         <h2
           ref={headingRef}
-          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600"
+          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-green-400 neon-text"
         >
           Contact Me
         </h2>
