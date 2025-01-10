@@ -5,7 +5,7 @@ import { OrbitControls, Sphere, Stars } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-const ContactPage: React.FC = () => {
+const Contact: React.FC = () => {
   const contactRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -153,4 +153,4 @@ const FloatingGlobe: React.FC = () => {
   );
 };
 
-export default ContactPage;
+export default Contact;

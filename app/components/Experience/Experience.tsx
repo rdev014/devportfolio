@@ -5,7 +5,7 @@ import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-const ExperiencePage: React.FC = () => {
+const Experience: React.FC = () => {
   const experienceRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -97,7 +97,9 @@ const ExperiencePage: React.FC = () => {
           {experiences.map((exp, index) => (
             <div
               key={index}
-              ref={(el) => (cardsRef.current[index] = el!)}
+              ref={(el) => {
+                if (el) cardsRef.current[index] = el; // Fix: Ensure the ref callback does not return a value
+              }}
               className="relative p-6 rounded-lg shadow-lg border border-gray-800 hover:scale-105 transition-transform duration-300"
               style={{ backgroundColor: exp.color }}
             >
@@ -174,4 +176,4 @@ const ParticleTunnel: React.FC = () => {
   return <points ref={particlesRef} geometry={particlesGeometry} material={particlesMaterial} />;
 };
 
-export default ExperiencePage;
+export default Experience;
