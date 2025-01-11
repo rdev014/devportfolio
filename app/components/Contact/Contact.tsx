@@ -1,155 +1,124 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, Stars } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
 const Contact: React.FC = () => {
-  const contactRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+  const logosRef = useRef<HTMLDivElement>(null);
 
-  // GSAP Animations on Load
   useEffect(() => {
-    // Animate the heading
+    // Animate heading and logos
     gsap.fromTo(
       headingRef.current,
       { opacity: 0, y: 50 },
       { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out', delay: 0.5 }
     );
 
-    // Animate the form
-    gsap.fromTo(
-      formRef.current,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 1 }
-    );
+    gsap.to(logosRef.current, { opacity: 1, duration: 1.5, ease: 'power3.out', delay: 1.5 });
   }, []);
 
   return (
-    <section
-      ref={contactRef}
-      className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden"
-    >
-      {/* 3D Background */}
-      <div className="absolute inset-0 z-0">
-        <Canvas>
-          <FloatingGlobe />
-          <OrbitControls enableZoom={false} enablePan={false} enableRotate={true} />
-        </Canvas>
-      </div>
+    <section className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Heading */}
+      <h2
+        ref={headingRef}
+        className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-green-400 neon-text"
+      >
+        Contact Me
+      </h2>
 
-      {/* Contact Content */}
-      <div className="flex flex-col items-center justify-center text-center z-10 p-4 w-full max-w-4xl">
-        <h2
-          ref={headingRef}
-          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-green-400 neon-text"
-        >
-          Contact Me
-        </h2>
-        <form
-          ref={formRef}
-          className="w-full bg-gray-900 p-8 rounded-lg shadow-lg border border-gray-800"
-        >
-          <div className="space-y-6">
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="name" className="text-lg text-gray-300">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                className="p-3 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Enter your name"
-              />
-            </div>
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="email" className="text-lg text-gray-300">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="p-3 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="message" className="text-lg text-gray-300">
-                Message
-              </label>
-              <textarea
-                id="message"
-                rows={5}
-                className="p-3 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Enter your message"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 rounded-lg hover:opacity-90 transition-opacity duration-300"
-            >
-              Send Message
-            </button>
-          </div>
-        </form>
+      {/* 3D Canvas */}
+      <Canvas className="absolute top-0 left-0 w-full h-full" camera={{ position: [0, 0, 10], fov: 50 }}>
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} intensity={0.5} />
+        <FloatingShapes />
+        <OrbitControls enableZoom={false} enablePan={false} />
+      </Canvas>
+
+      {/* Logos */}
+      <div
+        ref={logosRef}
+        className="flex space-x-8 md:space-x-16 mt-16 opacity-0"
+      >
+        <SvgLogo icon="github" />
+        <SvgLogo icon="linkedin" />
+        <SvgLogo icon="gmail" />
       </div>
     </section>
   );
 };
 
-// Floating Globe Component
-const FloatingGlobe: React.FC = () => {
-  const globeRef = useRef<THREE.Mesh>(null);
-  const particlesRef = useRef<THREE.Points>(null);
+// Floating Shapes Component
+const FloatingShapes = () => {
+  const shapesRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock }) => {
-    if (globeRef.current) {
-      // Rotate the globe
-      globeRef.current.rotation.y += 0.005;
-    }
-    if (particlesRef.current) {
-      // Move particles in a circular pattern
+    if (shapesRef.current) {
       const time = clock.getElapsedTime();
-      const positions = particlesRef.current.geometry.attributes.position.array;
-
-      for (let i = 0; i < positions.length; i += 3) {
-        const angle = (i / positions.length) * Math.PI * 2 + time * 0.1;
-        const radius = 5 + Math.sin(angle) * 2;
-        positions[i] = Math.cos(angle) * radius;
-        positions[i + 2] = Math.sin(angle) * radius;
-      }
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+      shapesRef.current.rotation.y = time * 0.2; // Slow rotation
     }
   });
 
   return (
-    <>
-      {/* Globe */}
-      <Sphere ref={globeRef} args={[2, 32, 32]} position={[0, 0, 0]}>
-        <meshStandardMaterial
-          color={0x00ff00}
-          emissive={0x00ff00}
-          emissiveIntensity={0.5}
-          transparent
-          opacity={0.8}
-        />
-      </Sphere>
+    <group ref={shapesRef}>
+      {/* Floating Sphere */}
+      <mesh position={[-3, 2, 0]}>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshStandardMaterial color="#00ccff" emissive="#00ccff" emissiveIntensity={0.5} />
+      </mesh>
 
-      {/* Particles */}
-      <points ref={particlesRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={1000}
-            array={new Float32Array(3000)}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <pointsMaterial color={0xffffff} size={0.02} />
-      </points>
-    </>
+      {/* Floating Cube */}
+      <mesh position={[3, -2, 0]}>
+        <boxGeometry args={[1.5, 1.5, 1.5]} />
+        <meshStandardMaterial color="#ff0088" emissive="#ff0088" emissiveIntensity={0.5} />
+      </mesh>
+
+      {/* Floating Torus */}
+      <mesh position={[0, 0, 0]}>
+        <torusGeometry args={[1.5, 0.5, 16, 100]} />
+        <meshStandardMaterial color="#00ff88" emissive="#00ff88" emissiveIntensity={0.5} />
+      </mesh>
+    </group>
+  );
+};
+
+// SvgLogo Component (Unchanged)
+const SvgLogo: React.FC<{ icon: string }> = ({ icon }) => {
+  let svgContent;
+
+  switch (icon) {
+    case 'github':
+      svgContent = (
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#333">
+          <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+        </svg>
+      );
+      break;
+    case 'linkedin':
+      svgContent = (
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#0077b5">
+          <path d="M19 0H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.784 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z"/>
+        </svg>
+      );
+      break;
+    case 'gmail':
+      svgContent = (
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#ea4335">
+          <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.076 3 1.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"/>
+        </svg>
+      );
+      break;
+    default:
+      svgContent = null;
+  }
+
+  return (
+    <div className="w-12 h-12 md:w-16 md:h-16 hover:scale-110 transition-transform duration-300">
+      {svgContent}
+    </div>
   );
 };
 
