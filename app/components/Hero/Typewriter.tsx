@@ -1,10 +1,10 @@
 'use client'; // Mark as Client Component
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 const Typewriter: React.FC = () => {
   const [text, setText] = useState<string>('');
-  const phrases: string[] = ['Developer', 'Designer', 'Creative Thinker'];
+  const phrases: string[] = useMemo(() => ['Developer', 'Designer', 'Creative Thinker'], []);
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState<number>(0);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 

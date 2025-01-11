@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
+import Image from 'next/image'; // Import the Image component
 
 const Projects: React.FC = () => {
   const projectsRef = useRef<HTMLDivElement>(null);
@@ -87,17 +88,22 @@ const Projects: React.FC = () => {
             <div
               key={index}
               ref={(el) => {
-                if (el) cardsRef.current[index] = el; // Fix: Ensure the ref callback does not return a value
+                if (el) cardsRef.current[index] = el;
               }}
               className="relative p-6 rounded-lg shadow-lg border border-gray-800 hover:scale-105 transition-transform duration-300"
             >
               <div className="absolute inset-0 bg-black opacity-30 rounded-lg"></div>
               <div className="relative z-10">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
-                />
+                {/* Updated Image Component */}
+                <div className="w-full h-48 relative rounded-lg mb-4 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill // Equivalent to layout="fill"
+                    style={{ objectFit: 'cover' }} // Ensures the image covers the container
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Responsive sizes
+                  />
+                </div>
                 <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
                 <p className="text-lg text-gray-300 mb-4">{project.description}</p>
                 <a

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import SocialIcons from './SocialIcons';
 import MobileMenu from './MobileMenu';
 import { Bebas_Neue } from 'next/font/google';
+
 // Load the Bebas Neue font
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -13,8 +14,6 @@ const bebasNeue = Bebas_Neue({
 });
 
 const Navbar = () => {
-;
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -23,7 +22,7 @@ const Navbar = () => {
         {/* Brand Name */}
         <Link
           href="/"
-          className="text-green-400 neon-text text-3xl font-bold"
+          className={`text-green-400 neon-text text-3xl font-bold ${bebasNeue.className}`}
         >
           Rahul Dev
         </Link>

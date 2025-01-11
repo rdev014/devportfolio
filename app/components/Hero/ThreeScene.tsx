@@ -2,14 +2,16 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'; // Updated import
 import gsap from 'gsap';
 
 const ThreeScene: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mountNode = mountRef.current; // Store the ref value in a variable
+
+    if (!mountNode) return;
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
@@ -17,7 +19,7 @@ const ThreeScene: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(renderer.domElement);
+    mountNode.appendChild(renderer.domElement);
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft ambient light
@@ -64,9 +66,9 @@ const ThreeScene: React.FC = () => {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      mountRef.current?.removeChild(renderer.domElement);
+      mountNode.removeChild(renderer.domElement);
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once
 
   return <div ref={mountRef} className="absolute inset-0 z-0" />;
 };

@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { Font } from 'three/examples/jsm/loaders/FontLoader.js'; // Import Font type
 import gsap from 'gsap';
 import Typewriter from './Typewriter';
 
@@ -12,7 +13,8 @@ const HeroSection: React.FC = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mount = mountRef.current; // Store mountRef.current in a variable
+    if (!mount) return;
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
@@ -24,7 +26,7 @@ const HeroSection: React.FC = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio); // Improve rendering on high-DPI screens
-    mountRef.current.appendChild(renderer.domElement);
+    mount.appendChild(renderer.domElement);
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft ambient light
@@ -57,7 +59,7 @@ const HeroSection: React.FC = () => {
 
     // Load Font and Create 3D Text
     const fontLoader = new FontLoader();
-    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font: any) => {
+    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font: Font) => {
       const textGeometry = new TextGeometry('Rahul Dev', {
         font: font,
         size: 1,
@@ -135,31 +137,40 @@ const HeroSection: React.FC = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
-      if (mountRef.current) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (mount) {
+        mount.removeChild(renderer.domElement);
       }
     };
   }, []);
 
   // Add hover animation to the button
   useEffect(() => {
-    if (buttonRef.current) {
-      const button = buttonRef.current;
-      button.addEventListener('mouseenter', () => {
-        gsap.to(button, {
-          scale: 1.05,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+    const button = buttonRef.current;
+    if (!button) return;
+
+    const onMouseEnter = () => {
+      gsap.to(button, {
+        scale: 1.05,
+        duration: 0.3,
+        ease: 'power2.out',
       });
-      button.addEventListener('mouseleave', () => {
-        gsap.to(button, {
-          scale: 1,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+    };
+
+    const onMouseLeave = () => {
+      gsap.to(button, {
+        scale: 1,
+        duration: 0.3,
+        ease: 'power2.out',
       });
-    }
+    };
+
+    button.addEventListener('mouseenter', onMouseEnter);
+    button.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      button.removeEventListener('mouseenter', onMouseEnter);
+      button.removeEventListener('mouseleave', onMouseLeave);
+    };
   }, []);
 
   return (
